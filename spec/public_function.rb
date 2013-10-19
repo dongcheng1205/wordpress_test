@@ -38,3 +38,23 @@ def delete_post_by_title(browser, title)
 	# 删除post
 	browser.link(class: 'submitdelete').when_present.click
 end
+
+def add_category_on_edit_post_page(browser, name, parent=nil)
+	edit_post_url = 'http://localhost/wordpress/wp-admin/post-new.php'
+	browser.goto edit_post_url
+	browser.a(id: 'category-add-toggle').click()
+	browser.text_field(name: 'newcategory').when_present.set(name)
+	if parent
+		browser.select(name: 'newcategory_parent').select(parent)
+	end #if
+	browser.button(:id, 'category-add-submit').click
+end
+
+def delete_all_categories(browser)
+	category_list_url = 'http://localhost/wordpress/wp-admin/edit-tags.php?taxonomy=category'
+	browser.goto category_list_url
+	browser.checkbox(id: 'cb-select-all-1').set true
+	browser.select(name: 'action').options.last.click
+	browser.button(id: 'doaction').click
+end
+
